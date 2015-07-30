@@ -1,14 +1,17 @@
 package org.elasticsearch.index.query.image;
 
 import net.semanticmetadata.lire.imageanalysis.LireFeature;
-import org.apache.lucene.index.AtomicReaderContext;
+import org.apache.lucene.index.LeafReaderContext;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.LeafReaderContext;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.*;
 import org.apache.lucene.util.Bits;
 import org.apache.lucene.util.ToStringUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 
@@ -69,16 +72,12 @@ public class ImageQuery extends Query {
 
     private class ImageWeight extends Weight {
         public ImageWeight(IndexSearcher searcher) {
+            super(ImageQuery.this);
         }
 
         @Override
         public String toString() {
             return "weight(" + ImageQuery.this + ")";
-        }
-
-        @Override
-        public Query getQuery() {
-            return ImageQuery.this;
         }
 
         @Override
@@ -91,41 +90,41 @@ public class ImageQuery extends Query {
         }
 
         @Override
-        public Scorer scorer(AtomicReaderContext context, Bits acceptDocs) throws IOException {
+        public Scorer scorer(LeafReaderContext context, Bits acceptDocs) throws IOException {
             return new ImageScorer(context.reader(), acceptDocs, this);
         }
 
         @Override
-        public Explanation explain(AtomicReaderContext context, int doc) throws IOException {
+        public Explanation explain(LeafReaderContext context, int doc) throws IOException {
             Scorer scorer = scorer(context, context.reader().getLiveDocs());
             if (scorer != null) {
                 int newDoc = scorer.advance(doc);
                 if (newDoc == doc) {
                     float score = scorer.score();
-                    ComplexExplanation result = new ComplexExplanation();
-                    result.setDescription("ImageQuery, product of:");
-                    result.setValue(score);
+
+                    List<Explanation> details = new ArrayList<Explanation>();
+
                     if (getBoost() != 1.0f) {
-                        result.addDetail(new Explanation(getBoost(),"boost"));
+                        details.add(Explanation.match(getBoost(), "boost"));
                         score = score / getBoost();
                     }
-                    result.addDetail(new Explanation(score ,"image score (1/distance)"));
-                    result.setMatch(true);
-                    return result;
+                    details.add(Explanation.match(score, "image score (1/distance)"));
+
+                    return Explanation.match(scorer.score(), "ImageQuery, product of:", details);
                 }
             }
 
-            return new ComplexExplanation(false, 0.0f, "no matching term");
+            return Explanation.noMatch("no matching term");
+        }
+
+        @Override
+        public void extractTerms(Set<Term> terms) {
         }
     }
 
     @Override
-    public Weight createWeight(IndexSearcher searcher) {
+    public Weight createWeight(IndexSearcher searcher, boolean needsScores) {
         return new ImageWeight(searcher);
-    }
-
-    @Override
-    public void extractTerms(Set<Term> terms) {
     }
 
     @Override
