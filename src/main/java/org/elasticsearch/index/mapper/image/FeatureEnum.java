@@ -28,6 +28,7 @@ public enum FeatureEnum {
     ROTATION_INVARIANT_LOCAL_BINARY_PATTERNS(RotationInvariantLocalBinaryPatterns.class),
     SCALABLE_COLOR(ScalableColor.class),
     TAMURA(Tamura.class),
+    ORB(ORBFeature.class)
     ;
 
     private Class<? extends LireFeature> featureClass;

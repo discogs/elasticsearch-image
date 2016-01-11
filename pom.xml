@@ -2,12 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <name>elasticsearch-image</name>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.endource</groupId>
+    <groupId>com.discogs</groupId>
     <artifactId>elasticsearch-image</artifactId>
-    <version>1.4.0-RC1</version>
+    <version>1.5.0-RC1</version>
     <packaging>jar</packaging>
     <description>Image Plugin for ElasticSearch</description>
-    <url>http://github.com/endource/elasticsearch-image</url>
+    <url>http://github.com/discogs/elasticsearch-image</url>
 
 
     <licenses>
@@ -18,9 +18,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:git@github.com:endource/elasticsearch-image.git</connection>
-        <developerConnection>scm:git:git@github.com:endource/elasticsearch-image.git</developerConnection>
-        <url>http://github.com/endource/elasticsearch-image</url>
+        <connection>scm:git:git@github.com:discogs/elasticsearch-image.git</connection>
+        <developerConnection>scm:git:git@github.com:discogs/elasticsearch-image.git</developerConnection>
+        <url>http://github.com/discogs/elasticsearch-image</url>
     </scm>
 
     <developers>
@@ -37,6 +37,11 @@
         <developer>
             <id>shin-nien</id>
             <name>Shin</name>
+        </developer>
+        <developer>
+            <id>squarelover</id>
+            <name>Sean Wolfe</name>
+            <email>swolfe@discogsinc.com</email>
         </developer>
     </developers>
 
@@ -62,10 +67,13 @@
             <id>endource</id>
             <url>https://dl.bintray.com/endource/maven/</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
-
         <dependency>
             <groupId>com.carrotsearch.randomizedtesting</groupId>
             <artifactId>randomizedtesting-runner</artifactId>
@@ -88,9 +96,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.endource</groupId>  <!-- Modified to deploy on maven -->
+            <groupId>com.github.discogs</groupId>  <!-- Modified to deploy on maven -->
             <artifactId>lire</artifactId>
-            <version>0.9.6-M1</version>
+            <version>0.9.7-DISCOGS-M11</version>
         </dependency>
 
         <dependency>
